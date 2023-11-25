@@ -1,0 +1,101 @@
+<!-- home.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Principal</title>
+</head>
+<body>
+  <h1>Bem-vindo à Página Principal</h1>
+
+  <section id="user-actions">
+    <button onclick="viewProfile()">Ver Meu Perfil</button>
+    <button onclick="logout()">Deslogar</button>
+  </section>
+
+  <!-- Seção de Cadastro de Novos Itens -->
+  <section id="new-items">
+    <h2>Escolha seus produtos</h2>
+    <!-- Formulário para cadastrar novos itens -->
+    <form action="/product/add" method="post">
+      <label for="item-name">Nome do Item:</label>
+      <input type="text" id="item-name" name="itemName" required>
+
+      <label for="item-price">QTD</label>
+      <input type="number" id="item-price" name="itemPrice" required>
+
+      <button type="submit">Comprar</button>
+    </form>
+  </section>
+
+  <section id="buy-items">
+    <h1></h1>
+    <!-- Adicione o link para a lista de produtos -->
+    <a href="/product/list">Ver Lista de Produtos</a>
+  </section>
+
+  <!-- JavaScript para lidar com a lógica de compra e ações do usuário -->
+  <script>
+    async function updateItemList() {
+      try {
+        const response = await fetch('/product/list');
+  
+        if (response.ok) {
+          const products = await response.json();
+          const itemList = document.getElementById('item-list');
+          itemList.innerHTML = '';
+  
+          products.forEach(product => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+              <span>${product.name}</span>
+              <span>R$ ${product.price.toFixed(2)}</span>
+              <button onclick="buyItem(${product.id})">Comprar</button>
+            `;
+            itemList.appendChild(listItem);
+          });
+        } else {
+          console.error('Erro ao obter lista de itens:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Erro ao obter lista de itens:', error.message);
+      }
+    }
+  
+    async function viewProfile() {
+  try {
+    const response = await fetch('/user/profile');
+    const userData = await response.json();
+    console.log('Informações do usuário:', userData);
+  } catch (error) {
+    console.error('Erro ao obter informações do usuário:', error.message);
+  }
+
+
+    
+    // Redireciona para a página de perfil
+    window.location.href = '/user/profile';
+}
+
+async function logout() {
+    try {
+      const response = await fetch('/user/logout', { method: 'GET' });
+
+      if (response.ok) {
+        // Redireciona para a página principal após o logout bem-sucedido
+        window.location.href = '/product/home';
+      } else {
+        console.error('Erro ao fazer logout:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error.message);
+    }
+  }
+  
+    // Chamada inicial para exibir itens existentes
+    updateItemList();
+  </script>
+</body>
+</html>

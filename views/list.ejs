@@ -1,0 +1,52 @@
+<!-- views/list.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus pedidos</title>
+</head>
+<body>
+    <h1>Meus pedidos</h1>
+    <ul>
+        <% products.forEach(product => { %>
+            <li data-product-id="<%= product.id %>">
+                <span><%= product.name %> - R$ <%= product.price %></span>
+                <button onclick="deleteItem('<%= product.id %>')">Excluir</button>
+            </li>
+        <% }); %>
+    </ul>
+
+    <script>
+        async function deleteItem(itemId) {
+            try {
+                const response = await fetch(`/product/delete/${itemId}`, { method: 'GET' });
+
+                if (response.ok) {
+                    const updatedProducts = await response.json();
+                    updateItemList(updatedProducts);
+                } else {
+                    console.error('Erro ao excluir item:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Erro ao excluir item:', error.message);
+            }
+        }
+
+        function updateItemList(products) {
+            const itemList = document.querySelector('ul');
+            itemList.innerHTML = '';
+
+            products.forEach(product => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span>${product.name} - R$ ${product.price.toFixed(2)}</span>
+                    <button onclick="deleteItem('${product.id}')">Excluir</button>
+                `;
+                itemList.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>

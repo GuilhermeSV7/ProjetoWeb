@@ -1,0 +1,74 @@
+<!-- profile.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil</title>
+</head>
+<body>
+  <h1>Meu Perfil</h1>
+
+  <p>Nome de usuário: <span id="username"></span></p>
+  <p>Senha: <span id="password"></span></p>
+
+  <h2>Alterar Senha</h2>
+  <form id="change-password-form">
+    <label for="new-password">Nova Senha:</label>
+    <input type="password" id="new-password" name="newPassword" required>
+
+    <button type="submit">Alterar Senha</button>
+  </form>
+
+  <button id="logoutButton">Deslogar</button>
+
+  <script>
+    // Preencher informações do usuário ao carregar a página
+    document.getElementById('username').innerText = '<%= user.username %>';
+    document.getElementById('password').innerText = '********'; // Você pode optar por exibir ou não a senha
+
+    // Adicionar lógica para alterar a senha
+    document.getElementById('change-password-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const newPassword = document.getElementById('new-password').value;
+
+      try {
+        const response = await fetch('/user/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ newPassword }),
+        });
+
+        if (response.ok) {
+          console.log('Senha alterada com sucesso!');
+          // Atualizar a interface conforme necessário
+        } else {
+          console.error('Erro ao alterar senha:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Erro ao alterar senha:', error.message);
+      }
+    });
+
+    document.getElementById('logoutButton').addEventListener('click', async function() {
+  try {
+    const response = await fetch('/user/logout', {
+      method: 'POST', // ou 'GET', dependendo da sua configuração no servidor
+    });
+
+    if (response.ok) {
+      console.log('Logout bem-sucedido!');
+      // Redirecionar ou atualizar a interface conforme necessário
+    } else {
+      console.error('Erro ao fazer logout:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Erro ao fazer logout:', error.message);
+  }
+});
+  </script>
+</body>
+</html>

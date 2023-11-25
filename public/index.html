@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Usuário</title>
+</head>
+<body>
+  <h1>Registro de Usuário</h1>
+  <form action="/user/register" method="post">
+    <!-- Seus campos de formulário aqui -->
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    
+    <button type="submit">Registrar</button>
+  </form>
+
+  <!-- Adicione o link ou botão para a página de login -->
+  <p>Já tem uma conta? <a href="/user/login">Faça login aqui</a></p>
+  <!-- ou -->
+  <!-- <button onclick="window.location.href='/user/login'">Faça login aqui</button> -->
+</body>
+</html>
